@@ -14,7 +14,7 @@ reads the "seo" block of content.json and writes those tags into:
 
 Environment (set by the workflow from actions/configure-pages, optional locally):
   SITE_URL   e.g. https://thangnguyen.com   (used if seo.siteUrl is empty)
-  BASE_PATH  e.g. "" or "/repo-name"         (sets <base href>)
+  BASE_PATH  e.g. "" or "/repo-name"         (canonical / og:url / sitemap; <base> tự nhận lúc chạy)
 
 Run locally:  python scripts/build.py   → then serve the _site folder.
 """
@@ -86,8 +86,7 @@ def main():
         h = head(title, description, image, path)
         if noindex:
             h = h.replace("<!-- SEO:END -->", '<meta name="robots" content="noindex">\n<!-- SEO:END -->')
-        out = re.sub(r"<!-- SEO:START.*?<!-- SEO:END -->", lambda m: h, tpl, count=1, flags=re.S)
-        return re.sub(r'<base href="[^"]*">', f'<base href="{base_path}">', out, count=1)
+        return re.sub(r"<!-- SEO:START.*?<!-- SEO:END -->", lambda m: h, tpl, count=1, flags=re.S)
 
     if OUT.exists():
         shutil.rmtree(OUT)
