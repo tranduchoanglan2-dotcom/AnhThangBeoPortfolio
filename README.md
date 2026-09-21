@@ -27,7 +27,7 @@ Trang đọc `content.json` bằng `fetch`, nên **không mở trực tiếp fil
 Lúc xem trên máy, hãy mở `http://localhost:xxxx/index.html`. Khi URL kết thúc bằng `.html`, trang tự chuyển sang kiểu đường dẫn `#/about`, nên chuyển trang qua lại vẫn chạy mà không cần server hỗ trợ rewrite.
 
 ## Thẻ `<base>` (trong `<head>`)
-Lúc deploy, build tự điền giá trị này theo cấu hình GitHub Pages (tên miền riêng thì là `/`, repo thường thì là `/ten-repo/`). Bạn không cần sửa tay.
+Một đoạn script nhỏ trong `<head>` tự nhận thư mục gốc: trên tên miền riêng là `/`, trên `ten.github.io/ten-repo/` là `/ten-repo/`. Bạn không cần sửa tay, và cũng không cần build lại khi đổi tên miền.
 
 ## Bảng chỉnh hiệu ứng (phím G)
 - Bật/tắt: `settings.tuningPanel` trong `content.json` (`true` / `false`)
