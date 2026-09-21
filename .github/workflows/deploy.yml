@@ -1,0 +1,43 @@
+# Mỗi lần có thay đổi trên nhánh main (bạn push, hoặc client bấm Save trong Pages CMS):
+# chạy scripts/build.py → ghi Title / Meta / OG từ content.json vào HTML → đưa lên GitHub Pages.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Build
+        run: python3 scripts/build.py
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
