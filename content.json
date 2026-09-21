@@ -64,10 +64,12 @@
       "pages": [
         "images/projects/auto-group-card.webp",
         "images/projects/frame-15-3.png",
-        "images/projects/layerzeroicon-1.png"
+        "images/projects/layerzeroicon-1.png",
+        "images/projects/ricardo-ona-1.png"
       ],
       "placeholderPages": 2
-    }
+    },
+    {}
   ],
   "about": {
     "nameLine1": "- NGUYEN",
