@@ -1,0 +1,275 @@
+# Cấu hình Pages CMS (app.pagescms.org) — giao diện form để client sửa content.json
+# Mỗi lần client bấm Save → Pages CMS commit lên GitHub → GitHub Actions tự build + deploy (~1–2 phút).
+
+media:
+  input: images
+  output: images
+  rename: safe
+  extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: site
+    label: Nội dung website
+    type: file
+    path: content.json
+    format: json
+    fields:
+
+      # ───────────── Trang chủ ─────────────
+      - name: hero
+        label: Trang chủ — Tiêu đề lớn
+        type: object
+        fields:
+          - name: location
+            label: Dòng 1 (địa điểm, chữ mờ)
+            type: string
+            description: "VD: HN, VIETNAM"
+          - name: firstName
+            label: Tên (trước ảnh avatar)
+            type: string
+          - name: lastName
+            label: Họ (sau ảnh avatar)
+            type: string
+          - name: role
+            label: Chức danh (dòng cuối)
+            type: string
+            description: "VD: PRODUCT DESIGNER — mỗi từ cách nhau 1 dấu cách. Nên ngắn, viết HOA."
+          - name: avatar
+            label: Ảnh chân dung
+            type: image
+            description: "Ảnh vuông, khoảng 600×600 px, WebP/JPG dưới 300 KB. Dùng cho khung ảnh ở trang About."
+            options:
+              path: images
+          - name: avatarPill
+            label: Ảnh avatar trong viên tròn (tuỳ chọn)
+            type: image
+            description: "Ảnh ngang tỉ lệ khoảng 14:9. Để trống thì dùng Ảnh chân dung."
+            options:
+              path: images
+
+      - name: projects
+        label: Dự án
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{fields.name} — {fields.year}"
+        description: "Kéo thả để đổi thứ tự hiển thị."
+        fields:
+          - name: name
+            label: Tên dự án
+            type: string
+            required: true
+          - name: slug
+            label: Đường dẫn (slug)
+            type: string
+            description: "Phần cuối link: thanguiux.com/work/slug. Chỉ chữ thường, số, gạch ngang. Để trống sẽ tự tạo từ tên. ĐÃ ĐĂNG THÌ ĐỪNG ĐỔI."
+            pattern: "^[a-z0-9-]*$"
+          - name: year
+            label: Năm
+            type: string
+          - name: type
+            label: Loại (VD Redesign, Product)
+            type: string
+          - name: platform
+            label: Nền tảng (VD Web App, Mobile App)
+            type: string
+          - name: status
+            label: Trạng thái (VD Live)
+            type: string
+          - name: card
+            label: Ảnh card (trang chủ)
+            type: image
+            description: "1240 × 698 px (tỉ lệ 620:349 ≈ 16:9). WebP, dưới 300 KB."
+            options:
+              path: images/projects
+          - name: hero
+            label: Ảnh hero (đầu trang dự án)
+            type: image
+            description: "Rộng 2880 px, CÙNG khung cắt với ảnh card (card sẽ phóng to thành ảnh này). WebP, dưới 600 KB."
+            options:
+              path: images/projects
+          - name: pages
+            label: Ảnh trang chi tiết (theo thứ tự)
+            type: image
+            list: true
+            description: "Export từng frame Figma, rộng 1920–2880 px, cao tuỳ ý. Kéo thả để sắp xếp."
+            options:
+              path: images/projects
+          - name: placeholderPages
+            label: Số ô xám tạm (khi chưa có ảnh chi tiết)
+            type: number
+            description: "Chỉ dùng khi danh sách ảnh ở trên đang trống."
+            options:
+              min: 0
+              max: 12
+
+      # ───────────── About ─────────────
+      - name: about
+        label: Trang About
+        type: object
+        fields:
+          - name: nameLine1
+            label: Tên — dòng 1 (chữ mờ)
+            type: string
+          - name: nameLine2
+            label: Tên — dòng 2 (chữ đậm)
+            type: string
+          - name: bio
+            label: Giới thiệu ngắn
+            type: text
+            options:
+              maxlength: 260
+          - name: experienceTitle
+            label: Tiêu đề cột Kinh nghiệm
+            type: string
+          - name: experience
+            label: Kinh nghiệm
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{fields.company} — {fields.time}"
+            fields:
+              - name: company
+                label: Công ty
+                type: string
+              - name: role
+                label: Vị trí
+                type: string
+              - name: time
+                label: Thời gian
+                type: string
+                description: "VD: 11/2025 - Now"
+          - name: certificatesTitle
+            label: Tiêu đề cột Chứng chỉ
+            type: string
+          - name: certificates
+            label: Học vấn & chứng chỉ
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{fields.org}"
+            fields:
+              - name: org
+                label: Trường / Tổ chức
+                type: string
+              - name: title
+                label: Tên bằng / khoá học
+                type: string
+              - name: note
+                label: Ghi chú (VD GPA 3.25)
+                type: string
+          - name: stats
+            label: Số liệu (đúng 3 ô)
+            type: object
+            list:
+              min: 3
+              max: 3
+              collapsible:
+                collapsed: true
+                summary: "{fields.value}{fields.suffix} {fields.label}"
+            fields:
+              - name: value
+                label: Con số
+                type: number
+              - name: suffix
+                label: Ký hiệu sau số (VD +)
+                type: string
+              - name: label
+                label: Mô tả
+                type: string
+          - name: contact
+            label: Liên hệ
+            type: object
+            fields:
+              - name: birthday
+                label: Ngày sinh
+                type: string
+              - name: email
+                label: Email
+                type: string
+              - name: location
+                label: Địa điểm
+                type: string
+              - name: phone
+                label: Số điện thoại (chữ hiển thị)
+                type: string
+              - name: phoneLink
+                label: Link khi bấm vào số điện thoại
+                type: string
+                description: "Zalo: https://zalo.me/84xxxxxxxxx — hoặc để trống để gọi điện trực tiếp."
+
+      - name: socials
+        label: Mạng xã hội
+        type: object
+        description: "Để trống link nào thì icon đó tự ẩn."
+        fields:
+          - name: behance
+            label: Link Behance
+            type: string
+          - name: linkedin
+            label: Link LinkedIn
+            type: string
+
+      # ───────────── Chung ─────────────
+      - name: site
+        label: Thông tin chung
+        type: object
+        fields:
+          - name: name
+            label: Tên hiển thị
+            type: string
+            description: "Dùng cho tiêu đề tab và chân trang."
+          - name: title
+            label: Chức danh
+            type: string
+          - name: handle
+            label: Handle ở màn hình loading
+            type: string
+            description: "VD: @THANGUYXN"
+          - name: year
+            label: Năm (góc phải menu, chân trang)
+            type: string
+
+      - name: seo
+        label: SEO & chia sẻ link
+        type: object
+        description: "Hiện trên Google và khi gửi link qua Zalo / Facebook / LinkedIn. Cập nhật sau khi deploy xong (~2 phút)."
+        fields:
+          - name: title
+            label: Tiêu đề trang (Title)
+            type: string
+            options:
+              maxlength: 70
+          - name: description
+            label: Mô tả (Meta description)
+            type: text
+            options:
+              maxlength: 160
+          - name: ogImage
+            label: Ảnh xem trước khi chia sẻ (OG image)
+            type: image
+            description: "1200 × 630 px, JPG hoặc PNG (không dùng WebP), dưới 1 MB."
+            options:
+              path: images
+              extensions: [jpg, jpeg, png]
+          - name: siteUrl
+            label: Địa chỉ website
+            type: string
+            readonly: true
+
+      - name: settings
+        label: Cài đặt nâng cao
+        type: object
+        fields:
+          - name: startProject
+            label: Dự án hiển thị giữa màn hình khi mở trang (số thứ tự, đếm từ 1)
+            type: number
+            options:
+              min: 1
+          - name: tuningPanel
+            label: Bật bảng chỉnh hiệu ứng (phím G)
+            type: boolean
+            description: "Dành cho designer. Nên tắt khi bàn giao."
