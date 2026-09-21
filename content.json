@@ -39,6 +39,9 @@
       "status": "hlkdshflaskfjlsf",
       "card": "images/projects/auto-group-card.webp",
       "hero": "images/projects/auto-group-hero.webp",
+      "pages": [
+        "images/projects/frame-427319354.png"
+      ],
       "placeholderPages": 3
     },
     {
