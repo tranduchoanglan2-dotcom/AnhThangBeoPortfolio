@@ -1,16 +1,4 @@
 {
-  "site": {
-    "name": "Thang Nguyen",
-    "title": "Product Designer",
-    "handle": "@THANGUYXN",
-    "year": "2026"
-  },
-  "seo": {
-    "siteUrl": "https://thanguiux.com",
-    "title": "Thang Nguyen — Product Designer",
-    "description": "Portfolio of Thang Nguyen — Product Designer based in Ha Noi, Viet Nam.",
-    "ogImage": "images/og-image.jpg"
-  },
   "hero": {
     "location": "HN, VIETNAM",
     "firstName": "THANG",
@@ -19,10 +7,68 @@
     "avatar": "images/avatar.webp",
     "avatarPill": "images/avatar-pill.webp"
   },
-  "socials": {
-    "behance": "https://www.behance.net/thngnguync20",
-    "linkedin": "https://www.linkedin.com/in/thngnguync20/"
-  },
+  "projects": [
+    {
+      "name": "Ads Check V8",
+      "slug": "ads-check-v8",
+      "year": "2026",
+      "type": "Redesign",
+      "platform": "Web App",
+      "status": "Live",
+      "card": "images/projects/ads-check-v8-card.webp",
+      "hero": "images/projects/ads-check-v8-hero.webp",
+      "placeholderPages": 4
+    },
+    {
+      "name": "ParknGo",
+      "slug": "parkngo",
+      "year": "2025",
+      "type": "Product",
+      "platform": "Mobile App",
+      "status": "Live",
+      "card": "images/projects/parkngo-card.webp",
+      "hero": "images/projects/parkngo-hero.webp",
+      "placeholderPages": 3
+    },
+    {
+      "name": "Auto Group",
+      "slug": "auto-group",
+      "year": "2026",
+      "type": "Redesign",
+      "platform": "Website",
+      "status": "Live",
+      "card": "images/projects/auto-group-card.webp",
+      "hero": "images/projects/auto-group-hero.webp",
+      "placeholderPages": 3
+    },
+    {
+      "name": "Nobi eCRM",
+      "slug": "nobi-ecrm",
+      "year": "2023",
+      "type": "Product",
+      "platform": "eCRM Web",
+      "status": "Live",
+      "card": "images/projects/nobi-ecrm-card.webp",
+      "hero": "images/projects/nobi-ecrm-hero.webp",
+      "placeholderPages": 4
+    },
+    {
+      "name": "Siuuu - Test",
+      "slug": "siuuu",
+      "year": "2069",
+      "type": "Test Type",
+      "platform": "Test Platform",
+      "status": "On going (Test)",
+      "card": "images/projects/lucy-harris-1.png",
+      "hero": "images/projects/networkmap-aec-2-havfrue.png",
+      "pages": [
+        "images/projects/auto-group-card.webp",
+        "images/projects/frame-15-3.png",
+        "images/projects/layerzeroicon-1.png"
+      ],
+      "placeholderPages": 2
+    }
+  ],
   "about": {
     "nameLine1": "- NGUYEN",
     "nameLine2": "DUC THANG",
@@ -83,56 +129,22 @@
       "phoneLink": "https://zalo.me/84397166247"
     }
   },
-  "projects": [
-    {
-      "name": "Ads Check V8",
-      "slug": "ads-check-v8",
-      "year": "2026",
-      "type": "Redesign",
-      "platform": "Web App",
-      "status": "Live",
-      "card": "images/projects/ads-check-v8-card.webp",
-      "hero": "images/projects/ads-check-v8-hero.webp",
-      "pages": [],
-      "placeholderPages": 4
-    },
-    {
-      "name": "ParknGo",
-      "slug": "parkngo",
-      "year": "2025",
-      "type": "Product",
-      "platform": "Mobile App",
-      "status": "Live",
-      "card": "images/projects/parkngo-card.webp",
-      "hero": "images/projects/parkngo-hero.webp",
-      "pages": [],
-      "placeholderPages": 3
-    },
-    {
-      "name": "Auto Group",
-      "slug": "auto-group",
-      "year": "2026",
-      "type": "Redesign",
-      "platform": "Website",
-      "status": "Live",
-      "card": "images/projects/auto-group-card.webp",
-      "hero": "images/projects/auto-group-hero.webp",
-      "pages": [],
-      "placeholderPages": 3
-    },
-    {
-      "name": "Nobi eCRM",
-      "slug": "nobi-ecrm",
-      "year": "2023",
-      "type": "Product",
-      "platform": "eCRM Web",
-      "status": "Live",
-      "card": "images/projects/nobi-ecrm-card.webp",
-      "hero": "images/projects/nobi-ecrm-hero.webp",
-      "pages": [],
-      "placeholderPages": 4
-    }
-  ],
+  "socials": {
+    "behance": "https://www.behance.net/thngnguync20",
+    "linkedin": "https://www.linkedin.com/in/thngnguync20/"
+  },
+  "site": {
+    "name": "Thang Nguyen",
+    "title": "Product Designer",
+    "handle": "@THANGUYXN",
+    "year": "2026"
+  },
+  "seo": {
+    "title": "Thang Nguyen — Product Designer",
+    "description": "Portfolio of Thang Nguyen — Product Designer based in Ha Noi, Viet Nam.",
+    "ogImage": "images/og-image.jpg",
+    "siteUrl": "https://thanguiux.com"
+  },
   "settings": {
     "startProject": 2,
     "tuningPanel": true
