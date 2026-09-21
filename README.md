@@ -1,0 +1,42 @@
+# Portfolio — Thang Nguyen
+
+## Cấu trúc
+```
+index.html      giao diện + hiệu ứng (client không sửa)
+content.json    toàn bộ chữ, link, đường dẫn ảnh, SEO (client sửa qua Pages CMS)
+images/         ảnh: avatar, icons/, projects/, og-image.jpg
+scripts/build.py            tạo bản deploy trong _site/ (ghi Title/Meta/OG vào HTML)
+.github/workflows/deploy.yml  GitHub Actions: tự build + deploy mỗi lần có thay đổi trên main
+```
+
+## SEO (Title, Meta description, OG image)
+Mục `seo` trong `content.json`. Facebook, Zalo và LinkedIn không chạy JavaScript, nên các thẻ này **được ghi thẳng vào HTML lúc deploy** (`scripts/build.py`), không phải lúc trang tải. Build tạo ra:
+- `index.html`, `about/index.html`, `work/<slug>/index.html` (mỗi trang có title riêng), `404.html`
+- `sitemap.xml`, `robots.txt`
+- Nếu `seo.siteUrl` để trống, build tự lấy tên miền đang cấu hình trên GitHub Pages.
+- OG image nên là JPG/PNG 1200×630.
+
+Chạy thử build trên máy: `python scripts/build.py`, rồi mở thư mục `_site` bằng một web server.
+
+## Xem thử trên máy
+Trang đọc `content.json` bằng `fetch`, nên **không mở trực tiếp file bằng double-click** được. Hãy chạy một web server nhỏ trong thư mục này:
+
+- VS Code: cài extension **Live Server**, chuột phải vào `index.html` rồi chọn *Open with Live Server*
+- hoặc: `npx serve .` / `python -m http.server`
+
+Lúc xem trên máy, hãy mở `http://localhost:xxxx/index.html`. Khi URL kết thúc bằng `.html`, trang tự chuyển sang kiểu đường dẫn `#/about`, nên chuyển trang qua lại vẫn chạy mà không cần server hỗ trợ rewrite.
+
+## Thẻ `<base>` (trong `<head>`)
+Lúc deploy, build tự điền giá trị này theo cấu hình GitHub Pages (tên miền riêng thì là `/`, repo thường thì là `/ten-repo/`). Bạn không cần sửa tay.
+
+## Bảng chỉnh hiệu ứng (phím G)
+- Bật/tắt: `settings.tuningPanel` trong `content.json` (`true` / `false`)
+- Chỉnh xong, bấm **Copy settings (JSON)** trong bảng rồi dán vào `settings.effects`. Khi đó mọi người xem đều thấy đúng thông số này. Nếu không dán vào, thông số chỉ được lưu trong trình duyệt của bạn.
+- Khi `tuningPanel` = `false`, phím G không còn tác dụng và các thông số lưu trong trình duyệt bị bỏ qua.
+
+## Ghi chú về dữ liệu
+- `settings.startProject`: project đứng giữa khi mở trang (đếm từ 1)
+- `projects[].pages`: danh sách ảnh trang chi tiết theo thứ tự. Nếu để trống, trang sẽ hiện `placeholderPages` ô xám.
+- `projects[].slug`: có thể để trống, khi đó slug được tạo tự động từ tên project. Đã đăng rồi thì không nên đổi, vì link `/work/<slug>` sẽ hỏng.
+- Ảnh thiếu hoặc sai đường dẫn sẽ hiện ô xám có tên project, trang không bị vỡ.
+- `about.stats`: bố cục chỉ có 3 vị trí.
