@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<!-- Thư mục gốc của site. Tên miền riêng / user.github.io: "/"  ·  repo thường trên GitHub Pages: "/ten-repo/" -->
-<base href="/">
+<!-- Thư mục gốc của site, tự nhận: tên miền riêng → "/", ten.github.io/ten-repo/ → "/ten-repo/" -->
+<script>(function(){var s=location.pathname.split('/')[1]||'',b='/';if(/\.github\.io$/.test(location.hostname)&&s&&s!=='about'&&s!=='work'&&!/\./.test(s))b='/'+s+'/';document.write('<base href="'+b+'">');})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- SEO:START — phần này được tạo lại tự động từ content.json (mục "seo") mỗi lần deploy -->
 <title>Thang Nguyen — Product Designer</title>
@@ -311,8 +311,8 @@ a:hover .roll .c,button:hover .roll .c{transform:translateY(-100%)}
   <div id="col" aria-label="Projects"></div>
 
   <div id="soc" class="soc-wrap">
-    <a class="soc be" data-social="behance" href="#" target="_blank" rel="noopener" aria-label="Behance"><img src="images/icons/behance.svg" alt=""></a>
-    <a class="soc li" data-social="linkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="images/icons/linkedin.svg" alt=""></a>
+    <a class="soc be" data-social="behance" href="#" target="_blank" rel="noopener" aria-label="Behance"><img data-src="images/icons/behance.svg" alt=""></a>
+    <a class="soc li" data-social="linkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><img data-src="images/icons/linkedin.svg" alt=""></a>
   </div>
 
   <div id="work" class="list">
@@ -353,8 +353,8 @@ a:hover .roll .c,button:hover .roll .c{transform:translateY(-100%)}
   <p id="bio" class="ab" data-c="about.bio"></p>
 
   <div id="asoc" class="ab soc-wrap">
-    <a class="soc be" data-social="behance" href="#" target="_blank" rel="noopener" aria-label="Behance"><img src="images/icons/behance.svg" alt=""></a>
-    <a class="soc li" data-social="linkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="images/icons/linkedin.svg" alt=""></a>
+    <a class="soc be" data-social="behance" href="#" target="_blank" rel="noopener" aria-label="Behance"><img data-src="images/icons/behance.svg" alt=""></a>
+    <a class="soc li" data-social="linkedin" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><img data-src="images/icons/linkedin.svg" alt=""></a>
   </div>
 
   <div class="srow" id="stats"></div>
@@ -464,6 +464,7 @@ if (!PROJECTS.length) PROJECTS.push({ name:'Project', slug:'project', detail:[''
   document.querySelectorAll('[data-c]').forEach(el => { el.textContent = str(get(V, el.dataset.c)); });
   const avatar = str(hero.avatar) || placeholderSrc(site.name || 'Avatar', 600, 600);
   const imgs = { avatar, avatarPill: str(hero.avatarPill) || avatar };
+  document.querySelectorAll('img[data-src]').forEach(im => { im.src = im.dataset.src; });   // đặt src sau khi có <base>
   document.querySelectorAll('[data-c-src]').forEach(el => { el.src = imgs[el.dataset.cSrc]; el.alt = str(site.name); });
   // role: "PRODUCT DESIGNER" → mỗi từ 1 khối, ô vuông hồng sau từ cuối
   const words = str(hero.role).split(/\s+/).filter(Boolean);
