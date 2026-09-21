@@ -6,7 +6,7 @@
     "year": "2026"
   },
   "seo": {
-    "siteUrl": "",
+    "siteUrl": "https://thanguiux.com",
     "title": "Thang Nguyen — Product Designer",
     "description": "Portfolio of Thang Nguyen — Product Designer based in Ha Noi, Viet Nam.",
     "ogImage": "images/og-image.jpg"
@@ -135,7 +135,6 @@
   ],
   "settings": {
     "startProject": 2,
-    "tuningPanel": true,
-    "effects": {}
+    "tuningPanel": true
   }
 }

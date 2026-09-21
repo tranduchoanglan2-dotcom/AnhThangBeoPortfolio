@@ -4,6 +4,8 @@
 ```
 index.html      giao diện + hiệu ứng (client không sửa)
 content.json    toàn bộ chữ, link, đường dẫn ảnh, SEO (client sửa qua Pages CMS)
+tuning.json     thông số hiệu ứng (designer sửa)
+.pages.yml      cấu hình form của Pages CMS
 images/         ảnh: avatar, icons/, projects/, og-image.jpg
 scripts/build.py            tạo bản deploy trong _site/ (ghi Title/Meta/OG vào HTML)
 .github/workflows/deploy.yml  GitHub Actions: tự build + deploy mỗi lần có thay đổi trên main
@@ -30,9 +32,14 @@ Lúc xem trên máy, hãy mở `http://localhost:xxxx/index.html`. Khi URL kết
 Một đoạn script nhỏ trong `<head>` tự nhận thư mục gốc: trên tên miền riêng là `/`, trên `ten.github.io/ten-repo/` là `/ten-repo/`. Bạn không cần sửa tay, và cũng không cần build lại khi đổi tên miền.
 
 ## Bảng chỉnh hiệu ứng (phím G)
-- Bật/tắt: `settings.tuningPanel` trong `content.json` (`true` / `false`)
-- Chỉnh xong, bấm **Copy settings (JSON)** trong bảng rồi dán vào `settings.effects`. Khi đó mọi người xem đều thấy đúng thông số này. Nếu không dán vào, thông số chỉ được lưu trong trình duyệt của bạn.
+- Bật/tắt: `settings.tuningPanel` trong `content.json` (`true` / `false`), hoặc trong Pages CMS vào mục **Cài đặt nâng cao**.
+- Thông số dùng cho mọi người xem nằm trong **`tuning.json`** (tách khỏi `content.json` để client không đụng tới). Chỉnh xong, bấm **Copy settings (JSON)** trong bảng rồi dán vào mục `effects` của `tuning.json` trên GitHub.
+- Nếu chưa dán vào `tuning.json`, thông số bạn chỉnh chỉ được lưu trong trình duyệt của bạn.
 - Khi `tuningPanel` = `false`, phím G không còn tác dụng và các thông số lưu trong trình duyệt bị bỏ qua.
+
+## Pages CMS
+`.pages.yml` khai báo form cho **toàn bộ** các trường trong `content.json`. Khi thêm trường mới vào `content.json`, nhớ khai báo luôn trong `.pages.yml`.
+Ảnh client upload được lưu vào `images/` và tự đổi tên an toàn (bỏ dấu, bỏ khoảng trắng).
 
 ## Ghi chú về dữ liệu
 - `settings.startProject`: project đứng giữa khi mở trang (đếm từ 1)

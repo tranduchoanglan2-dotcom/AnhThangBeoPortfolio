@@ -418,7 +418,7 @@ a:hover .roll .c,button:hover .roll .c{transform:translateY(-100%)}
    Toàn bộ chữ, link, ảnh nằm trong content.json (client sửa qua Pages CMS).
    File này chỉ chứa giao diện + hiệu ứng.
    ========================================================= */
-function APP(C){
+function APP(C, T){
 'use strict';
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
 const get = (o, path) => path.split('.').reduce((v, k) => v == null ? v : v[k], o);
@@ -523,8 +523,9 @@ const DEFAULTS = {
   ease: 'signature', duration: .95,
 };
 const STORE = 'gh-scroll-bend-v2';
-/* settings.effects trong content.json (dán từ nút "Copy settings (JSON)") ghi đè DEFAULTS cho mọi người xem */
-if (SETTINGS.effects && typeof SETTINGS.effects === 'object') Object.keys(DEFAULTS).forEach(k => { if (k in SETTINGS.effects) DEFAULTS[k] = SETTINGS.effects[k]; });
+/* tuning.json → "effects" (dán từ nút "Copy settings (JSON)") ghi đè DEFAULTS cho mọi người xem */
+const FX = (T && T.effects && typeof T.effects === 'object') ? T.effects : {};
+Object.keys(DEFAULTS).forEach(k => { if (k in FX) DEFAULTS[k] = FX[k]; });
 const P = Object.assign({}, DEFAULTS);
 if (TUNING) try { Object.assign(P, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
 const saveP = () => { try { localStorage.setItem(STORE, JSON.stringify(P)); } catch (e) {} };
@@ -1499,9 +1500,11 @@ if (TUNING) console.log('%cScroll-bend GUI: press G', 'font:600 12px sans-serif'
 }
 
 /* Tải content.json rồi chạy trang */
-fetch('content.json', { cache: 'no-cache' })
-  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-  .then(APP)
+const getJSON = (u, optional) => fetch(u, { cache: 'no-cache' })
+  .then(r => { if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); })
+  .catch(e => { if (optional) return {}; throw e; });
+Promise.all([getJSON('content.json'), getJSON('tuning.json', true)])   // tuning.json: thông số hiệu ứng, không bắt buộc
+  .then(([c, t]) => APP(c, t))
   .catch(err => {
     console.error('Không đọc được content.json:', err);
     const local = location.protocol === 'file:';
