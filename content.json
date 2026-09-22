@@ -5,11 +5,7 @@
     "lastName": "(NGUYEN)",
     "role": "PRODUCT DESIGNER",
     "avatar": "images/avatar.webp",
-    "avatarPill": "images/avatar-pill.webp",
-    "pillImages": [
-      "images/og-img.png",
-      "images/layerzeroicon-6.png"
-    ]
+    "avatarPill": "images/avatar-pill.webp"
   },
   "projects": [
     {
@@ -22,10 +18,6 @@
       "status": "Live",
       "card": "images/projects/ads-check-v8-card.webp",
       "hero": "images/projects/ads-check-v8-hero.webp",
-      "pages": [
-        "images/projects/adscheck-2.webp",
-        "images/projects/adscheck-3.webp"
-      ],
       "placeholderPages": 4
     },
     {
@@ -50,9 +42,6 @@
       "status": "On going",
       "card": "images/projects/auto-group-card.webp",
       "hero": "images/projects/auto-group-hero.webp",
-      "pages": [
-        "images/projects/frame-427319354.png"
-      ],
       "placeholderPages": 3
     },
     {
