@@ -17,6 +17,10 @@
       "status": "Live",
       "card": "images/projects/ads-check-v8-card.webp",
       "hero": "images/projects/ads-check-v8-hero.webp",
+      "pages": [
+        "images/projects/adscheck-2.webp",
+        "images/projects/adscheck-3.webp"
+      ],
       "placeholderPages": 4
     },
     {
@@ -56,21 +60,16 @@
       "placeholderPages": 4
     },
     {
-      "name": "Siuuu - Test",
-      "slug": "siuuu",
-      "year": "2069",
+      "name": "Em Lân Test TRANSLATOR",
+      "year": "2077",
       "type": "Test Type",
       "platform": "Test Platform",
-      "status": "On going (Test)",
-      "card": "images/projects/lucy-harris-1.png",
-      "hero": "images/projects/networkmap-aec-2-havfrue.png",
+      "status": "Test State",
+      "card": "images/projects/hero.webp",
+      "hero": "images/projects/hero.webp",
       "pages": [
-        "images/projects/auto-group-card.webp",
-        "images/projects/frame-15-3.png",
-        "images/projects/layerzeroicon-1.png",
-        "images/projects/ricardo-ona-1.png"
-      ],
-      "placeholderPages": 2
+        "images/projects/landing-page.webp"
+      ]
     }
   ],
   "about": {
