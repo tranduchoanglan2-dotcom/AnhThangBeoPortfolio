@@ -18,12 +18,15 @@ Environment (set by the workflow from actions/configure-pages, optional locally)
 
 Run locally:  python scripts/build.py   → then serve the _site folder.
 """
-import html, json, os, re, shutil, sys, unicodedata
+import hashlib, html, json, os, re, shutil, subprocess, sys, unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "_site"
-SKIP = {"_site", "scripts", ".github", ".git", ".pages.yml", "README.md", ".gitignore", ".DS_Store"}
+SKIP = {"_site", "scripts", ".github", ".git", ".pages.yml", "README.md", ".gitignore", ".DS_Store", ".imgcache"}
+CACHE = ROOT / ".imgcache"          # ảnh đã resize (GitHub Actions giữ lại giữa các lần deploy)
+SIZES = (2880, 1440)                # bản lớn cho desktop, bản nhỏ cho điện thoại
+HERO_MAX = 2880
 
 def s(v):
     return "" if v is None else str(v).strip()
@@ -44,6 +47,86 @@ def projects(c):
         seen.append(slugify(p.get("slug") or p.get("name")))
         out.append({**p, "slug": slug})
     return out
+
+# ---------- Ảnh: tự thu nhỏ ảnh quá lớn (client upload ảnh 4x vẫn ổn) ----------
+def _pil():
+    try:
+        from PIL import Image
+    except ImportError:
+        for extra in (["--user", "--break-system-packages"], ["--user"], []):   # runner Ubuntu mới chặn pip mặc định
+            if subprocess.run([sys.executable, "-m", "pip", "install", "--quiet", *extra, "pillow"], check=False).returncode == 0:
+                break
+        try:
+            import site; sys.path.append(site.getusersitepackages())
+            from PIL import Image
+        except Exception:
+            return None
+    Image.MAX_IMAGE_PIXELS = None
+    return Image
+
+def _resized(Image, src_rel, width):
+    """Trả về (đường dẫn web, w, h) của bản rộng tối đa `width` (WebP q82). Dùng cache theo nội dung file."""
+    src = ROOT / src_rel
+    data = src.read_bytes()
+    key = hashlib.sha1(data).hexdigest()[:12]
+    CACHE.mkdir(exist_ok=True)
+    meta = CACHE / f"{key}-{width}.json"
+    if meta.exists():
+        m = json.loads(meta.read_text())
+    else:
+        with Image.open(src) as im:
+            im.load()
+            W, H = im.size
+            if W <= width and src.suffix.lower() == ".webp":
+                m = {"file": None, "w": W, "h": H}                  # đủ nhỏ rồi, dùng file gốc
+            else:
+                if im.mode not in ("RGB", "RGBA"):
+                    im = im.convert("RGBA" if "A" in im.getbands() else "RGB")
+                tw = min(width, W); th = round(H * tw / W)
+                k = max(1, W // (tw * 2))
+                if k > 1: im = im.reduce(k)                           # thu nhỏ nhanh trước, rồi Lanczos
+                im = im.resize((tw, th), Image.LANCZOS)
+                out = CACHE / f"{key}-{width}.webp"
+                im.save(out, "WEBP", quality=82, method=4)
+                m = {"file": out.name, "w": tw, "h": th}
+        meta.write_text(json.dumps(m))
+    if m["file"] is None:
+        return src_rel, m["w"], m["h"]
+    dest = OUT / "images" / "_opt" / f"{Path(src_rel).stem}-{m['file']}"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if not dest.exists():
+        shutil.copy2(CACHE / m["file"], dest)
+    return dest.relative_to(OUT).as_posix(), m["w"], m["h"]
+
+def optimize_images(c):
+    Image = _pil()
+    if Image is None:
+        print("! Không có Pillow — bỏ qua bước tối ưu ảnh"); return c, 0
+    n = 0
+    for p in c.get("projects") or []:
+        if not isinstance(p, dict) or p.get("hidden") is True:
+            continue
+        h = s(p.get("hero"))
+        if h and (ROOT / h).is_file():
+            try:
+                p["hero"], p["heroW"], p["heroH"] = _resized(Image, h, HERO_MAX); n += 1
+            except Exception as e:
+                print("! hero", h, e)
+        pages = []
+        for g in p.get("pages") or []:
+            g = s(g) if not isinstance(g, dict) else s(g.get("src"))
+            if not g or not (ROOT / g).is_file():
+                pages.append(g); continue
+            try:
+                big, w, hh = _resized(Image, g, SIZES[0])
+                small, sw, _ = _resized(Image, g, SIZES[1])
+                item = {"src": big, "w": w, "h": hh}
+                if sw < w: item["srcset"] = f"{small} {sw}w, {big} {w}w"
+                pages.append(item); n += 1
+            except Exception as e:
+                print("! page", g, e); pages.append(g)
+        if "pages" in p: p["pages"] = pages
+    return c, n
 
 def main():
     c = json.loads((ROOT / "content.json").read_text(encoding="utf-8"))
@@ -100,6 +183,10 @@ def main():
         f = OUT / rel
         f.parent.mkdir(parents=True, exist_ok=True)
         f.write_text(text, encoding="utf-8")
+
+    c_opt, n_img = optimize_images(json.loads(json.dumps(c)))
+    (OUT / "content.json").write_text(json.dumps(c_opt, ensure_ascii=False), encoding="utf-8")   # bản content đã trỏ tới ảnh tối ưu
+    print(f"Optimized {n_img} project images")
 
     write("index.html", page(home_title, desc, og_default, ""))
     write("404.html", page(home_title, desc, og_default, "", noindex=True))

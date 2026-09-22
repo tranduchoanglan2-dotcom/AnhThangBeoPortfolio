@@ -464,9 +464,10 @@ const PROJECTS = (Array.isArray(C.projects) ? C.projects : []).filter(p => p && 
   let slug = slugify(p.slug || name);
   if (arr.slice(0, i).some(q => slugify(q.slug || q.name) === slug)) slug += '-' + (i + 1);
   const d = Array.isArray(p.detail) ? p.detail : [p.year, p.type, p.platform, p.status];
-  const pages = (Array.isArray(p.pages) ? p.pages : []).map(str).filter(Boolean);
+  // ảnh chi tiết: chuỗi đường dẫn (repo) hoặc { src, srcset, w, h } (bản đã tối ưu do build.py tạo)
+  const pages = (Array.isArray(p.pages) ? p.pages : []).map(g => (g && typeof g === 'object') ? g : { src: str(g) }).filter(g => str(g.src));
   const img = str(p.card) || placeholderSrc(name);
-  return { name, slug, detail: [0, 1, 2, 3].map(k => str(d[k])), img, hero: str(p.hero) || img,
+  return { name, slug, detail: [0, 1, 2, 3].map(k => str(d[k])), img, hero: str(p.hero) || img, heroW: +p.heroW || 0, heroH: +p.heroH || 0,
            pages: pages.length ? pages : Math.max(0, parseInt(p.placeholderPages, 10) || 3) };
 });
 /* mobile: mỗi dự án thứ 5, 6 đẩy danh sách Work + cột ảnh lên 1 dòng (2.5rem) để không đè tiêu đề */
@@ -1059,7 +1060,7 @@ function introHomeReturn(delay){
 /* ---------- hero images: decoded up front so the grow never waits ---------- */
 const heroSrc = i => PROJECTS[i].hero || PROJECTS[i].img;
 const HERO = PROJECTS.map((p, i) => { const im = new Image(); im.decoding = 'async'; im.src = heroSrc(i); return im; });
-const heroRatio = i => HERO[i].naturalWidth ? HERO[i].naturalWidth / HERO[i].naturalHeight : 16 / 9;
+const heroRatio = i => HERO[i].naturalWidth ? HERO[i].naturalWidth / HERO[i].naturalHeight : (PROJECTS[i].heroW && PROJECTS[i].heroH ? PROJECTS[i].heroW / PROJECTS[i].heroH : 16 / 9);
 const heroRect = i => { const W = pjScroll.clientWidth || pjPage.clientWidth; return { left: 0, top: 0, width: W, height: W / heroRatio(i) }; };
 
 /* ---------- thumbnail → frame 1 of the project ---------- */
@@ -1175,10 +1176,11 @@ function pageList(p){
   return arr.map(g => typeof g === 'string' ? { src: g } : { ...g, ratio: g.w && g.h ? g.w / g.h : 0 });
 }
 
+let preObs = null;
 function renderProject(i){
   projectIdx = i;
   const p = PROJECTS[i], ni = (i + 1) % N, nx = PROJECTS[ni];
-  const list = [{ src: heroSrc(i), ratio: HERO[i].naturalWidth ? heroRatio(i) : 0 }, ...pageList(p)];
+  const list = [{ src: heroSrc(i), ratio: (HERO[i].naturalWidth || p.heroW) ? heroRatio(i) : 0 }, ...pageList(p)];
   const total = list.length;
   frames.forEach(f => f.remove());
   frames = list.map((g, j) => {
@@ -1187,12 +1189,21 @@ function renderProject(i){
     f.className = 'pj-f' + (j ? '' : ' is-hero') + (g.ratio ? ' is-fixed' : '');
     if (g.ratio) f.style.aspectRatio = String(g.ratio);
     f.innerHTML = '<div class="pj-fi">' + (g.src
-      ? `<img src="${esc(g.src)}" alt="${esc(p.name)} — ${lbl}" draggable="false"${j ? ' loading="lazy"' : ''}>`
+      ? `<img src="${esc(g.src)}"${g.srcset ? ` srcset="${esc(g.srcset)}" sizes="100vw"` : ''}${g.w && g.h ? ` width="${g.w}" height="${g.h}"` : ''} alt="${esc(p.name)} — ${lbl}" draggable="false" decoding="async"${j > 2 ? ' loading="lazy"' : j ? ' fetchpriority="low"' : ' fetchpriority="high"'}>`
       : `<div class="pj-ph"><i class="ph-sq"></i><span class="ph-lbl">${esc(p.name)} — ${lbl}</span><span class="ph-sz">${g.w} × ${g.h}</span></div>`)
       + '</div>';
     pjStack.insertBefore(f, pjEnd);
     return f;
   });
+  // tải trước: khi một frame gần tới màn hình, 3 frame kế tiếp chuyển sang tải ngay (không chờ lazy)
+  if (preObs) preObs.disconnect();
+  preObs = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const k = frames.indexOf(e.target);
+    frames.slice(k, k + 4).forEach(fr => { const im = fr.querySelector('img[loading="lazy"]'); if (im) im.loading = 'eager'; });
+    preObs.unobserve(e.target);
+  }), { root: pjScroll, rootMargin: '150% 0px' });
+  frames.forEach(fr => preObs.observe(fr));
   $('#pjNextName').innerHTML = wordMasks(nx.name);
   fitNextName();
   $('#pjNextIdx').textContent = `(${pad2(ni + 1)}/${pad2(N)})`;
