@@ -46,6 +46,20 @@ content:
             description: "Ảnh ngang tỉ lệ khoảng 14:9. Để trống thì dùng Ảnh chân dung."
             options:
               path: images
+          - name: pillImages
+            label: Ảnh chạy trong viên tròn (đổi lần lượt)
+            type: image
+            list: true
+            description: "Thêm từ 2 ảnh trở lên để ảnh tự đổi (mask trồi từ dưới lên). Ảnh ngang tỉ lệ khoảng 14:9, ~560×360 px, WebP dưới 100 KB. Kéo thả để đổi thứ tự. Để trống thì dùng ảnh avatar trong viên tròn ở trên."
+            options:
+              path: images
+          - name: pillInterval
+            label: Thời gian đổi ảnh (giây)
+            type: number
+            description: "Mặc định 2 giây."
+            options:
+              min: 1
+              max: 10
 
       - name: projects
         label: Dự án

@@ -109,6 +109,9 @@ a:hover .roll .c,button:hover .roll .c{transform:translateY(-100%)}
 .av-wrap{position:absolute;top:0;bottom:0;left:50%;width:var(--pw);margin-left:calc(var(--pw) / -2)}
 .av-wrap.full{left:0;right:0;width:auto;margin-left:0}
 .av-wrap img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+/* pill: ảnh mới trồi lên bằng mask từ dưới lên, ảnh bên trong zoom out nhẹ */
+.av-layer{position:absolute;inset:0;overflow:hidden;clip-path:inset(100% 0 0 0)}
+.av-layer img{position:absolute;inset:0;transform:scale(1.25)}
 /* avatar placeholder */
 .avatar{position:absolute;inset:0;overflow:hidden}
 .avatar i{position:absolute;left:50%;background:rgba(40,0,60,.2)}
@@ -465,6 +468,9 @@ const PROJECTS = (Array.isArray(C.projects) ? C.projects : []).filter(p => p && 
 document.documentElement.style.setProperty('--wx', (Math.max(0, PROJECTS.length - 4) * 2.5).toFixed(3) + 'rem');
 if (!PROJECTS.length) PROJECTS.push({ name:'Project', slug:'project', detail:['','','',''], img: placeholderSrc('Project'), hero: placeholderSrc('Project'), pages: 3 });
 
+/* Ảnh pill đổi vòng tròn (hero.pillImages) */
+let PILL_SEQ = [], PILL_EVERY = 2;
+
 /* Điền chữ / link / ảnh vào HTML */
 (function applyContent(){
   const site = C.site || {}, hero = C.hero || {}, about = C.about || {}, soc = C.socials || {}, ct = about.contact || {};
@@ -474,7 +480,10 @@ if (!PROJECTS.length) PROJECTS.push({ name:'Project', slug:'project', detail:[''
   });
   document.querySelectorAll('[data-c]').forEach(el => { el.textContent = str(get(V, el.dataset.c)); });
   const avatar = str(hero.avatar) || placeholderSrc(site.name || 'Avatar', 600, 600);
-  const imgs = { avatar, avatarPill: str(hero.avatarPill) || avatar };
+  const pills = (Array.isArray(hero.pillImages) ? hero.pillImages : []).map(str).filter(Boolean);
+  const imgs = { avatar, avatarPill: pills[0] || str(hero.avatarPill) || avatar };
+  PILL_SEQ = pills.length > 1 ? pills : [];
+  PILL_EVERY = Math.max(1, parseFloat(hero.pillInterval) || 2);
   document.querySelectorAll('img[data-src]').forEach(im => { im.src = im.dataset.src; });   // đặt src sau khi có <base>
   document.querySelectorAll('[data-c-src]').forEach(el => { el.src = imgs[el.dataset.cSrc]; el.alt = str(site.name); });
   // role: "PRODUCT DESIGNER" → mỗi từ 1 khối, ô vuông hồng sau từ cuối
@@ -1488,6 +1497,30 @@ function buildGui(){
    ========================================================= */
 let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { measure(); GL.resize(); }, 80); });
 
+/* Pill: mỗi PILL_EVERY giây đổi sang ảnh kế tiếp — lớp mới chồng lên, mask quét từ dưới lên, ảnh zoom out nhẹ */
+function startPillCycle(){
+  if (PILL_SEQ.length < 2 || RM) return;
+  const wrap = $('#pillAv'); if (!wrap) return;
+  const cache = PILL_SEQ.map(src => { const im = new Image(); im.decoding = 'async'; im.src = src; return im; });
+  let idx = 0, running = false;
+  setInterval(() => {
+    if (running || document.hidden || current !== 'home' || busy) return;
+    const next = (idx + 1) % PILL_SEQ.length;
+    if (!cache[next].complete || !cache[next].naturalWidth) return;       // chưa tải xong thì đợi lượt sau
+    running = true; idx = next;
+    const layer = document.createElement('span'); layer.className = 'av-layer';
+    const im = document.createElement('img'); im.src = PILL_SEQ[next]; im.alt = ''; im.draggable = false;
+    layer.appendChild(im); wrap.appendChild(layer);
+    const D = 1.1;
+    layer.animate([{ clipPath:'inset(100% 0 0 0)' }, { clipPath:'inset(0% 0 0 0)' }], { duration: ms(D), easing: EASE, fill:'forwards' });
+    const a = im.animate([{ transform:'scale(1.25)' }, { transform:'scale(1)' }], { duration: ms(D + .3), easing: EASE, fill:'forwards' });
+    a.onfinish = () => {
+      // ảnh mới thành ảnh nền, xoá các lớp cũ
+      const base = wrap.querySelector(':scope > img'); if (base) base.src = PILL_SEQ[next];
+      requestAnimationFrame(() => { wrap.querySelectorAll('.av-layer').forEach(l => l.remove()); running = false; });
+    };
+  }, PILL_EVERY * 1000);
+}
 async function boot(){
   try { await document.fonts.ready; } catch (e) {}
   const r0 = parseRoute();                       // deep links: /about, /work/<slug>
@@ -1516,6 +1549,7 @@ async function boot(){
   $('#ld').style.display = 'none';
   busy = false;
   syncGui();
+  startPillCycle();
 }
 boot();
 if (TUNING) console.log('%cScroll-bend GUI: press G', 'font:600 12px sans-serif');
