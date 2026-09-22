@@ -85,7 +85,28 @@
       "status": "Live",
       "card": "images/projects/nobi-ecrm-card.webp",
       "hero": "images/projects/nobi-ecrm-hero.webp",
-      "placeholderPages": 4
+      "pages": [
+        "images/projects/nobi-2.webp",
+        "images/projects/nobi-3.webp",
+        "images/projects/nobi-4.webp",
+        "images/projects/nobi-5.webp",
+        "images/projects/nobi-6.webp",
+        "images/projects/nobi-7.webp",
+        "images/projects/nobi-8.webp",
+        "images/projects/nobi-9.webp",
+        "images/projects/nobi-10.webp",
+        "images/projects/nobi-11.webp",
+        "images/projects/nobi-12.webp",
+        "images/projects/nobi-13.webp",
+        "images/projects/nobi-14.webp",
+        "images/projects/nobi-15.webp",
+        "images/projects/nobi-16.webp",
+        "images/projects/nobi-17.webp",
+        "images/projects/nobi-18.webp",
+        "images/projects/nobi-19.webp",
+        "images/projects/nobi-20.webp"
+      ],
+      "placeholderPages": 0
     }
   ],
   "about": {
