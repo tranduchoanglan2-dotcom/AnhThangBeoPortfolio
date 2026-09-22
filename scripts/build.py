@@ -36,7 +36,7 @@ def slugify(t):
 
 def projects(c):
     out, seen = [], []
-    raw = [p for p in (c.get("projects") or []) if isinstance(p, dict) and s(p.get("name"))]
+    raw = [p for p in (c.get("projects") or []) if isinstance(p, dict) and s(p.get("name")) and p.get("hidden") is not True][:6]  # tối đa 6 dự án, giống index.html  # hidden → không tạo trang, không vào sitemap
     for i, p in enumerate(raw):
         slug = slugify(p.get("slug") or p.get("name"))
         if slug in seen:  # same rule as index.html
