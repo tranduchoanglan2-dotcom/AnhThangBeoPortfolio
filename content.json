@@ -5,11 +5,16 @@
     "lastName": "(NGUYEN)",
     "role": "PRODUCT DESIGNER",
     "avatar": "images/avatar.webp",
-    "avatarPill": "images/avatar-pill.webp"
+    "avatarPill": "images/avatar-pill.webp",
+    "pillImages": [
+      "images/og-img.png",
+      "images/layerzeroicon-6.png"
+    ]
   },
   "projects": [
     {
       "name": "Ads Check V8",
+      "hidden": false,
       "slug": "ads-check-v8",
       "year": "2026",
       "type": "Redesign",
@@ -25,6 +30,7 @@
     },
     {
       "name": "ParknGo",
+      "hidden": false,
       "slug": "parkngo",
       "year": "2025",
       "type": "Product",
@@ -36,6 +42,7 @@
     },
     {
       "name": "Auto Group",
+      "hidden": false,
       "slug": "auto-group",
       "year": "2026",
       "type": "Redesign",
@@ -50,6 +57,7 @@
     },
     {
       "name": "Nobi eCRM",
+      "hidden": false,
       "slug": "nobi-ecrm",
       "year": "2023",
       "type": "Product",
@@ -61,6 +69,7 @@
     },
     {
       "name": "Em Lân Test TRANSLATOR",
+      "hidden": false,
       "year": "2077",
       "type": "Test Type",
       "platform": "Test Platform",
