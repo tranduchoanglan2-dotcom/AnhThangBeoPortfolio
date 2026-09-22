@@ -18,7 +18,21 @@
       "status": "Live",
       "card": "images/projects/ads-check-v8-card.webp",
       "hero": "images/projects/ads-check-v8-hero.webp",
-      "placeholderPages": 4
+      "pages": [
+        "images/projects/adscheck-2-1.webp",
+        "images/projects/adscheck-3-1.webp",
+        "images/projects/adscheck-4.webp",
+        "images/projects/adscheck-5.webp",
+        "images/projects/adscheck-6.webp",
+        "images/projects/adscheck-7.webp",
+        "images/projects/adscheck-8.webp",
+        "images/projects/adscheck-9.webp",
+        "images/projects/adscheck-10.webp",
+        "images/projects/adscheck-11.webp",
+        "images/projects/adscheck-12.webp",
+        "images/projects/adscheck-13.webp"
+      ],
+      "placeholderPages": 0
     },
     {
       "name": "ParknGo",
