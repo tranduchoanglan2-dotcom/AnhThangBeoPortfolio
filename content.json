@@ -66,19 +66,6 @@
       "card": "images/projects/nobi-ecrm-card.webp",
       "hero": "images/projects/nobi-ecrm-hero.webp",
       "placeholderPages": 4
-    },
-    {
-      "name": "Em Lân Test TRANSLATOR",
-      "hidden": false,
-      "year": "2077",
-      "type": "Test Type",
-      "platform": "Test Platform",
-      "status": "Test State",
-      "card": "images/projects/hero.webp",
-      "hero": "images/projects/hero.webp",
-      "pages": [
-        "images/projects/landing-page.webp"
-      ]
     }
   ],
   "about": {
