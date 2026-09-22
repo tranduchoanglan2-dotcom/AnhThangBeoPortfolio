@@ -45,7 +45,22 @@
       "status": "Live",
       "card": "images/projects/parkngo-card.webp",
       "hero": "images/projects/parkngo-hero.webp",
-      "placeholderPages": 3
+      "pages": [
+        "images/projects/parkngo-1.webp",
+        "images/projects/parkngo-2.webp",
+        "images/projects/parkngo-3.webp",
+        "images/projects/parkngo-4.webp",
+        "images/projects/parkngo-5.webp",
+        "images/projects/parkngo-6.webp",
+        "images/projects/parkngo-7.webp",
+        "images/projects/parkngo-8.webp",
+        "images/projects/parkngo-9.webp",
+        "images/projects/parkngo-10.webp",
+        "images/projects/parkngo-11.webp",
+        "images/projects/parkngo-12.webp",
+        "images/projects/parkngo-13.webp"
+      ],
+      "placeholderPages": 0
     },
     {
       "name": "Auto Group",
