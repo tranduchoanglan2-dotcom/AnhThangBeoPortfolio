@@ -47,3 +47,7 @@ Một đoạn script nhỏ trong `<head>` tự nhận thư mục gốc: trên t�
 - `projects[].slug`: có thể để trống, khi đó slug được tạo tự động từ tên project. Đã đăng rồi thì không nên đổi, vì link `/work/<slug>` sẽ hỏng.
 - Ảnh thiếu hoặc sai đường dẫn sẽ hiện ô xám có tên project, trang không bị vỡ.
 - `about.stats`: bố cục chỉ có 3 vị trí.
+- Tối đa **6 dự án** hiển thị (`MAX_PROJECTS` trong `index.html`, `[:6]` trong `build.py`, `list.max: 6` trong `.pages.yml`). Trên mobile, danh sách Work và cột ảnh tự đẩy lên theo số dự án (`--wx`).
+- Mobile: card đang active opacity 100%, card khác 70% (`alpha` trong `layoutCards()`, cả WebGL lẫn DOM). Nút mũi tên cố định ở góc card.
+- `projects[].hidden: true`: ẩn dự án khỏi website (không có trang `/work/...`, không có trong sitemap), nội dung vẫn được giữ lại.
+- Tên dự án dài ở mục "Next project" tự thu nhỏ chữ (`fitNextName()`), tối đa 2 dòng, không đẩy ảnh ra ngoài.

@@ -51,15 +51,20 @@ content:
         label: Dự án
         type: object
         list:
+          max: 6
           collapsible:
             collapsed: true
             summary: "{fields.name} — {fields.year}"
-        description: "Kéo thả để đổi thứ tự hiển thị."
+        description: "Tối đa 6 dự án (bố cục thiết kế cho 6). Kéo thả để đổi thứ tự hiển thị."
         fields:
           - name: name
             label: Tên dự án
             type: string
             required: true
+          - name: hidden
+            label: Ẩn dự án này khỏi website
+            type: boolean
+            description: "Bật để tạm ẩn (vẫn giữ nguyên nội dung, tắt đi là hiện lại). Link /work/... của dự án cũng tạm không truy cập được."
           - name: slug
             label: Đường dẫn (slug)
             type: string
